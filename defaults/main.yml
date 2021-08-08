@@ -1,0 +1,14 @@
+---
+# tasks/main.yml (volta)
+# Prefix : volta
+
+## volta のインストール先
+volta_prefix: "/usr/local/volta"
+
+## volta のパスをインストールユーザにパスを追加するかどうか
+#  - yes : {{ volta_prefix }}/bin をインストールユーザの .bashrc に追加する
+#  - no  : ↑を追加しない
+volta_add_into_path_for_install_user: no  # デフォルトは no にしておく
+
+## Node.js のバージョンの指定
+volta_node_version: "16"

@@ -1,0 +1,11 @@
+---
+# tasks/main.yml (volta)
+# Prefix : volta
+
+- name: Install volta
+  command:
+    cmd: >
+      bash -c "
+        curl -L https://get.volta.sh | VOLTA_HOME=\"{{ volta_prefix }}\" bash {{ volta_add_into_path_for_install_user | ternary('', '-s -- --skip-setup') }}
+      "
+    creates: "{{ volta_prefix }}"
