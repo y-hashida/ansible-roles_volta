@@ -2,10 +2,36 @@
 # tasks/main.yml (volta)
 # Prefix : volta
 
-- name: Install volta
+- name: "Prepare each directory"
+  file:
+    path: "{{ item }}"
+    state: "directory"
+    mode: "0755"
+  loop:
+    - "{{ volta_prefix }}/bin"
+    - "{{ volta_prefix }}/ansible_log/volta"
+
+- name: "Install volta"
   command:
     cmd: >
       bash -c "
-        curl -L https://get.volta.sh | VOLTA_HOME=\"{{ volta_prefix }}\" bash {{ volta_add_into_path_for_install_user | ternary('', '-s -- --skip-setup') }}
+        set -o pipefail &&
+        export VOLTA_HOME=\"{{ volta_prefix }}/volta_home\" &&
+        curl -L https://get.volta.sh | bash {{ volta_add_into_path_for_install_user | ternary('', '-s -- --skip-setup') }} &&
+        touch {{ volta_prefix }}/ansible_log/volta/installed_volta.txt
       "
-    creates: "{{ volta_prefix }}"
+    creates: "{{ volta_prefix }}/ansible_log/volta/installed_volta.txt"
+
+- name: "Deploy wrapper script"
+  template:
+    src: "wrapper.sh.j2"
+    dest: "{{ volta_prefix }}/bin/{{ item }}"
+    mode: "0755"
+  loop:
+    - "node"
+    - "npm"
+    - "npx"
+    - "volta"
+    - "volta-migrate"
+    - "volta-shim"
+    - "yarn"
