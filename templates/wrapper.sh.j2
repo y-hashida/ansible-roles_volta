@@ -4,6 +4,6 @@ set -eu
 set -o pipefail
 
 export VOLTA_HOME="{{ volta_prefix }}/volta_home"
-cd ${VOLTA_HOME}
+export PATH="${VOLTA_HOME}/bin:${PATH}"
 
-./bin/{{ item }} "${@}"
+{{ item }} "${@}"
