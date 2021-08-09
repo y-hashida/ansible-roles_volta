@@ -35,3 +35,13 @@
     - "volta-migrate"
     - "volta-shim"
     - "yarn"
+
+- name: "Install node ({{ volta_node_version }})"
+  command:
+    cmd: >
+      bash -c "
+        {{ volta_prefix }}/bin/volta install node@{{ volta_node_version }} &&
+        rm -f {{ volta_prefix }}/ansible_log/volta/installed_node-*.txt &&
+        touch {{ volta_prefix }}/ansible_log/volta/installed_node-{{ volta_node_version }}.txt
+      "
+    creates: "{{ volta_prefix }}/ansible_log/volta/installed_node-{{ volta_node_version }}.txt"
