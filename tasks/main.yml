@@ -10,6 +10,7 @@
   loop:
     - "{{ volta_prefix }}/bin"
     - "{{ volta_prefix }}/ansible_log/volta"
+    - "{{ volta_prefix }}/completions"
 
 - name: "Install volta"
   command:
@@ -45,3 +46,18 @@
         touch {{ volta_prefix }}/ansible_log/volta/installed_node-{{ volta_node_version }}.txt
       "
     creates: "{{ volta_prefix }}/ansible_log/volta/installed_node-{{ volta_node_version }}.txt"
+
+- name: "Get volta completion"
+  shell:
+    cmd: |
+      bash -eu << 'EOF'
+      {{ volta_prefix }}/bin/volta completions bash
+      EOF
+  changed_when: no
+  check_mode: no
+  register: __result_completion
+
+- name: "Create volta completion"
+  copy:
+    content: "{{ __result_completion.stdout }}"
+    dest: "{{ volta_prefix }}/completions/volta_completion.bash"
